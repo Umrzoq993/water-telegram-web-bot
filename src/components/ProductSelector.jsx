@@ -12,13 +12,15 @@ const ProductSelector = () => {
   useEffect(() => {
     const tg = window.Telegram.WebApp;
 
-    if (!tg) return;
+    if (!tg) {
+      console.log("❌ Telegram WebApp API mavjud emas");
+      return;
+    }
 
     const onSend = () => {
-      alert("clicked");
-      if (selected) {
-        tg.sendData(JSON.stringify(selected));
-      }
+      console.log("📤 Tugma bosildi!");
+      console.log("📦 Yuborilayotgan ma'lumot:", selected);
+      tg.sendData(JSON.stringify(selected));
     };
 
     tg.onEvent("mainButtonClicked", onSend);
@@ -31,7 +33,7 @@ const ProductSelector = () => {
     }
 
     return () => {
-      tg.offEvent("mainButtonClicked", onSend); // Clean up
+      tg.offEvent("mainButtonClicked", onSend);
     };
   }, [selected]);
 
