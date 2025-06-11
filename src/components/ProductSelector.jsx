@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 const products = [
   { id: 1, name: "5L Baklashka", price: 10000 },
@@ -13,20 +13,23 @@ const ProductSelector = () => {
     const tg = window.Telegram.WebApp;
 
     if (!tg) {
-      console.log("❌ Telegram WebApp API mavjud emas");
+      console.log("❌ Telegram WebApp mavjud emas.");
       return;
     }
 
+    tg.ready(); // 🔑 eng muhim qadam – Web App ni ishga tayyorlash
+
     const onSend = () => {
-      console.log("📤 Tugma bosildi!");
-      console.log("📦 Yuborilayotgan ma'lumot:", selected);
-      tg.sendData(JSON.stringify(selected));
+      if (selected) {
+        console.log("📤 Tugma bosildi!");
+        tg.sendData(JSON.stringify(selected));
+      }
     };
 
-    tg.onEvent("mainButtonClicked", onSend);
+    tg.onEvent("mainButtonClicked", onSend); // ✅ Main Button listener
 
     if (selected) {
-      tg.MainButton.setParams({ text: "Buyurtmani yuborish" });
+      tg.MainButton.setText("Buyurtmani yuborish");
       tg.MainButton.show();
     } else {
       tg.MainButton.hide();
