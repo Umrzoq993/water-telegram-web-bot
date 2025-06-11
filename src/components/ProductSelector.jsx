@@ -25,7 +25,7 @@ const ProductSelector = () => {
   }, [selected]);
 
   const onSendData = useCallback(() => {
-    console.log("📤 Tugma bosildi!");
+    alert("✅ sendData ishga tushdi!");
     if (selected) {
       telegram.sendData(JSON.stringify(selected));
     }
