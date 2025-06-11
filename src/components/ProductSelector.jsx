@@ -11,14 +11,27 @@ const ProductSelector = () => {
 
   useEffect(() => {
     const tg = window.Telegram.WebApp;
+
+    if (!tg) return;
+
+    const onSend = () => {
+      if (selected) {
+        tg.sendData(JSON.stringify(selected));
+      }
+    };
+
+    tg.onEvent("mainButtonClicked", onSend);
+
     if (selected) {
+      tg.MainButton.setParams({ text: "Buyurtmani yuborish" });
       tg.MainButton.show();
-      tg.MainButton.onClick(() => {
-        tg.sendData(JSON.stringify(selected)); // Botga yuboriladi
-      });
     } else {
       tg.MainButton.hide();
     }
+
+    return () => {
+      tg.offEvent("mainButtonClicked", onSend); // Clean up
+    };
   }, [selected]);
 
   return (
