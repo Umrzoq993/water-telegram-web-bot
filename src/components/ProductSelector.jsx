@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 
 const products = [
   { id: 1, name: "5L Baklashka", price: 10000 },
@@ -6,35 +6,39 @@ const products = [
   { id: 3, name: "20L Baklashka", price: 25000 },
 ];
 
-const telegram = window.Telegram.WebApp;
-
 const ProductSelector = () => {
   const [selected, setSelected] = useState(null);
 
   useEffect(() => {
-    telegram.ready(); // faollashtirish
-  }, []);
+    const tg = window.Telegram.WebApp;
 
-  useEffect(() => {
-    if (selected) {
-      telegram.MainButton.setText("Buyurtmani yuborish");
-      telegram.MainButton.show();
-    } else {
-      telegram.MainButton.hide();
+    if (!tg) {
+      console.log("❌ Telegram WebApp mavjud emas.");
+      return;
     }
-  }, [selected]);
 
-  const onSendData = useCallback(() => {
-    alert("✅ sendData ishga tushdi!");
-    // if (selected) {
-    //   telegram.sendData(JSON.stringify(selected));
-    // }
-  }, [selected]);
+    tg.ready(); // 🔑 eng muhim qadam – Web App ni ishga tayyorlash
 
-  useEffect(() => {
-    telegram.onEvent("mainButtonClicked", onSendData);
-    return () => telegram.offEvent("mainButtonClicked", onSendData);
-  }, [onSendData]);
+    const onSend = () => {
+      if (selected) {
+        console.log("📤 Tugma bosildi!");
+        tg.sendData(JSON.stringify(selected));
+      }
+    };
+
+    tg.onEvent("mainButtonClicked", onSend); // ✅ Main Button listener
+
+    if (selected) {
+      tg.MainButton.setText("Buyurtmani yuborish");
+      tg.MainButton.show();
+    } else {
+      tg.MainButton.hide();
+    }
+
+    return () => {
+      tg.offEvent("mainButtonClicked", onSend);
+    };
+  }, [selected]);
 
   return (
     <div>
