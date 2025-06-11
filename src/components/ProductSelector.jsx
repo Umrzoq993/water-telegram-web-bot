@@ -26,9 +26,9 @@ const ProductSelector = () => {
 
   const onSendData = useCallback(() => {
     alert("✅ sendData ishga tushdi!");
-    if (selected) {
-      telegram.sendData(JSON.stringify(selected));
-    }
+    // if (selected) {
+    //   telegram.sendData(JSON.stringify(selected));
+    // }
   }, [selected]);
 
   useEffect(() => {
