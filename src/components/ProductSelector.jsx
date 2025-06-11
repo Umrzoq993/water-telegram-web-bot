@@ -15,6 +15,7 @@ const ProductSelector = () => {
     if (!tg) return;
 
     const onSend = () => {
+      alert("clicked");
       if (selected) {
         tg.sendData(JSON.stringify(selected));
       }
